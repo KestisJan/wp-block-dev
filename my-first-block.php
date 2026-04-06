@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH') ) {
 // Register the block when WordPress is ready
 add_action( 'init', 'my_frst_block_my_first_block_init' );
 
-function my_first_block_my_first_block_init() {
+function my_frst_block_my_first_block_init() {
 	// Point to /build not src/ - WordPress read block.json from there.
 	// __DIR__ = absolute path to this file's folder.
 	register_block_type( __DIR__ . '/build/my-first-block' );
