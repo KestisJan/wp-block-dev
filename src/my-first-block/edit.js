@@ -29,13 +29,31 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
+// export default function Edit() {
+// 	return (
+// 		<p { ...useBlockProps() }>
+// 			{ __(
+// 				'My First Block – hello from the editor!',
+// 				'my-first-block'
+// 			) }
+// 		</p>
+// 	);
+// }
+
+/**
+ * Trying out reference guide
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/
+ */
 export default function Edit() {
+	// Defining properties in a variable
+	const blockProps = useBlockProps({
+		className: 'agency-test-class',
+	});
+
+	// Variable spread into the wrapper element
 	return (
-		<p { ...useBlockProps() }>
-			{ __(
-				'My First Block – hello from the editor!',
-				'my-first-block'
-			) }
-		</p>
-	);
+		<div { ...blockProps}>
+			<p>Custom variable for block properties.</p>
+		</div>
+	)
 }
