@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -44,16 +44,22 @@ import './editor.scss';
  * Trying out reference guide
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/
  */
-export default function Edit() {
-	// Defining properties in a variable
-	const blockProps = useBlockProps({
-		className: 'agency-test-class',
-	});
+export default function Edit( { attributes, setAttributes } ) {
+	const { content } = attributes;
 
-	// Variable spread into the wrapper element
+	const onChangeContent = ( newContent ) => {
+		setAttributes( { content: newContent } )
+	};
+
 	return (
-		<div { ...blockProps}>
-			<p>Custom variable for block properties.</p>
+		<div { ...useBlockProps() }>
+			<RichText
+				tagName='p' // The tag that will be rendered
+				value={ content } // The current value from attributes
+				onChange={ onChangeContent } // The function to run on every keystore
+				placeholder={ __( 'Type your block content here...' , 'my-first-block' ) }
+				className="agency-test-class" 
+			/>
 		</div>
-	)
+	);
 }
