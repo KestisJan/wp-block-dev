@@ -43,6 +43,17 @@ Explored the `useBlockProps` hook within `src/edit.js`. Successfully injected a 
 ### 3. Git Workflow & Essential Commands
 Through the development process, I established a workflow for managing a nested WordPress plugin structure. 
 
+### 4. Attributes & Data Persistence
+Moved from static content to dynamic data by defining attributes in `block.json`.
+*   **Implementation**: Added a `content` attribute with `source: "html"` and `selector: "p"`. This tells WordPress exactly where to find and save the data within the block's markup.
+*   **Lesson**: Attributes act as the "schema" for the block. Without them, the block has no memory.
+
+### 5. RichText & The "Handshake"
+Implemented the `RichText` component to create a true WYSIWYG (What You See Is What You Get) experience.
+*   **Editor (`edit.js`)**: Used `RichText` with `onChange` and `setAttributes` to update the data as the user types.
+*   **Frontend (`save.js`)**: Used `RichText.Content` to ensure the saved HTML is rendered correctly for visitors.
+*   **Validation**: Learned that `save.js` must mirror the structure of `edit.js` to avoid "Block Validation Errors."
+
 #### 🛠 Learned Git Commands
 *   **Check Status**: `git status` — Used to verify which files are staged, unstaged, or untracked.
 *   **Targeted Staging**: `git add <file-path>` — Learned to stage specific files (e.g., `git add src/my-first-block/edit.js`) to maintain atomic commits.
@@ -62,6 +73,9 @@ Through the development process, I established a workflow for managing a nested 
 ---
 
 ### Next Steps in the Learning Journey
-*   [ ] Define **Attributes** in `block.json` for data persistence.
-*   [ ] Implement the **RichText** component for an interactive editing experience.
-*   [ ] Ensure `save.js` output remains synchronized with the `edit.js` wrapper structure.
+*   [x] Define **Attributes** in `block.json` for data persistence.
+*   [x] Implement the **RichText** component for an interactive editing experience.
+*   [x] Ensure `save.js` output remains synchronized with the `edit.js` wrapper structure.
+*   [ ] **Inspector Controls**: Add a sidebar settings panel (e.g., color settings or toggles).
+*   [ ] **Block Styles**: Add custom CSS to `style.scss` (frontend) and `editor.scss` (editor-only).
+*   [ ] **Toolbar Customization**: Limit formatting options (e.g., only allow Bold and Italic).
