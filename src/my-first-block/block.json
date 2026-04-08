@@ -11,6 +11,10 @@
 		"backgroundColor": {
 			"type": "string",
 			"default": "#ffffff"
+		},
+		"textAlign": {
+			"type": "string",
+			"default": "left"
 		}
 	},
 	"version": "0.1.0",
