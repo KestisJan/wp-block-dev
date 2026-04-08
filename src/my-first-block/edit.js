@@ -11,8 +11,22 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { 
+	useBlockProps, 
+	RichText,
+	InspectorControls
+} from '@wordpress/block-editor';
 
+/**
+ * Generic WordPress UI components used to create the interface.
+ * These components are used to build the sidebar, toolbars, and modals.
+ * 
+ * @see https://developer.wordpress.org/block-editor/reference-guides/components/
+ */
+import {
+	PanelBody,
+	ColorPalette
+} from '@wordpress/components';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -45,21 +59,47 @@ import './editor.scss';
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { content } = attributes;
+	// Destructure the attributes we defined in block.json
+	const { content, backgroundColor } = attributes;
 
+	// Handler for text changes
 	const onChangeContent = ( newContent ) => {
 		setAttributes( { content: newContent } )
 	};
 
+	// Handler for color changes
+	const onChangeBackgroundColor = ( newColor ) => {
+		setAttributes( { backgroundColor: newColor } );
+	};
+
 	return (
-		<div { ...useBlockProps() }>
-			<RichText
-				tagName='p' // The tag that will be rendered
-				value={ content } // The current value from attributes
-				onChange={ onChangeContent } // The function to run on every keystore
-				placeholder={ __( 'Type your block content here...' , 'my-first-block' ) }
-				className="agency-test-class" 
-			/>
-		</div>
+		<>
+			{ /* 1. The Sidebar (Inspector Controls) */}
+			<InspectorControls>
+				<PanelBody title={ __( 'Appearance Settings', 'my-first-block' ) }>
+						<p>{ __( 'Background Color', 'my-first-block' ) }</p>
+						<ColorPalette
+								value={ backgroundColor }
+								onChange={ onChangeBackgroundColor }
+						/>
+				</PanelBody>
+			</InspectorControls>
+
+			{ /* 2. The Block Interface */ }
+			<div 
+				{ ...useBlockProps( {
+					style: { backgroundColor: backgroundColor },
+					className: 'agency-test-class'
+				} ) }>
+				<RichText
+					tagName='p' // The tag that will be rendered
+					value={ content } // The current value from attributes
+					onChange={ onChangeContent } // The function to run on every keystore
+					placeholder={ __( 'Type your block content here...' , 'my-first-block' ) }
+					className="agency-test-class" 
+				/>
+			</div>
+		
+		</>
 	);
 }
