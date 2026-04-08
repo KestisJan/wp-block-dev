@@ -6,20 +6,29 @@
 import { __ } from '@wordpress/i18n';
 
 /**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
+ *	Block Editor components and hooks.
+ * 	
+ * 	- useBlockProps: Standard hook to apply block wrapper attributes and styles.
+ *  - RichText: The editable text component with formatting support.
+ *  - InspectorControls: Container for settings that appear in the Sidebar (Right panel).
+ *  - BlockControls: Container for the Toolbar that floats above a selected block.
+ *  - AlignmentControl: A specialized UI component for Text Alignment (Left, Center, Right).
+ * 
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { 
 	useBlockProps, 
 	RichText,
-	InspectorControls
+	InspectorControls,
+	BlockControls,
+	AlignmentControl,
 } from '@wordpress/block-editor';
 
 /**
- * Generic WordPress UI components used to create the interface.
- * These components are used to build the sidebar, toolbars, and modals.
+ * Generic WordPress UI components.
+ * 
+ * - PanelBody: A collapsible container used to organize settings in the sidebar.
+ * - ColorPalette: A visual selector for choosing colors from a predefined set.
  * 
  * @see https://developer.wordpress.org/block-editor/reference-guides/components/
  */
@@ -60,16 +69,21 @@ import './editor.scss';
  */
 export default function Edit( { attributes, setAttributes } ) {
 	// Destructure the attributes we defined in block.json
-	const { content, backgroundColor } = attributes;
+	const { content, backgroundColor, textAlign } = attributes;
 
 	// Handler for text changes
 	const onChangeContent = ( newContent ) => {
-		setAttributes( { content: newContent } )
+		setAttributes( { content: newContent } );
 	};
 
 	// Handler for color changes
 	const onChangeBackgroundColor = ( newColor ) => {
 		setAttributes( { backgroundColor: newColor } );
+	};
+
+	// Handler for alignment
+	const onChangeAlignment = ( newAlign ) => {
+		setAttributes( { textAlign: newAlign } );
 	};
 
 	return (
@@ -86,17 +100,28 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			{ /* 2. The Block Interface */ }
-			<div 
+			<BlockControls>
+				<AlignmentControl
+					value={ textAlign }
+					onChange={ onChangeAlignment }
+				/>
+			</BlockControls>
+
+			{ /* 3. The Block Interface (The actual content) */}
+			<div
 				{ ...useBlockProps( {
-					style: { backgroundColor: backgroundColor },
+					style: {
+						backgroundColor: backgroundColor,
+						textAlign: textAlign
+					},
 					className: 'agency-test-class'
-				} ) }>
+				} ) }
+			>
 				<RichText
-					tagName='p' // The tag that will be rendered
-					value={ content } // The current value from attributes
-					onChange={ onChangeContent } // The function to run on every keystore
-					placeholder={ __( 'Type your block content here...' , 'my-first-block' ) }
-					className="agency-test-class" 
+					tagName="p"
+					value={ content }
+					onChange={ onChangeContent }
+					placeholder={ __( 'Type your block content here...', 'my-first-block' ) }				
 				/>
 			</div>
 		
