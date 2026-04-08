@@ -16,11 +16,15 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save( { attributes } ) {
-	const { content, backgroundColor } = attributes;
+	// Destructure the attributes (Must match edit.js)
+	const { content, backgroundColor, textAlign } = attributes;
 
 	return (
 		<div { ...useBlockProps.save( { 
-				style: { backgroundColor: backgroundColor }
+				style: { 
+					backgroundColor: backgroundColor,
+					textAlign: textAlign
+				 }
 		 	} ) }
 		 >
 			<RichText.Content
