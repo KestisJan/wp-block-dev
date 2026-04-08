@@ -16,14 +16,18 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save( { attributes } ) {
-	const { content } = attributes;
+	const { content, backgroundColor } = attributes;
 
 	return (
-		<div { ...useBlockProps}>
+		<div { ...useBlockProps.save( { 
+				style: { backgroundColor: backgroundColor }
+		 	} ) }
+		 >
 			<RichText.Content
 				tagName='p'
 				value={ content }
 			/>
 		</div>
-	)
+	);
 }
+
