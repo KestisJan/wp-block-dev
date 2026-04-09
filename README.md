@@ -3,7 +3,7 @@
 A custom WordPress Gutenberg block built to understand the "Handshake" between PHP, React, and the WordPress Block Editor. This project serves as a technical log for mastering block development and agency-standard workflows.
 
 ## 🛠 Tech Stack
-*   **PHP**: Server-side block registration via `register_block_type`.
+*   **PHP**: Server-side block registration and **Dynamic Rendering** via `render_callback`.
 *   **React (JSX)**: Editor interface logic located in `src/edit.js`.
 *   **WordPress Scripts**: Build tooling provided by `@wordpress/scripts`.
 *   **LocalWP**: Local development environment.
@@ -32,50 +32,42 @@ A custom WordPress Gutenberg block built to understand the "Handshake" between P
 
 ### 1. PHP Initialization (The "Fatal Error" Fix)
 Encountered a `TypeError` on the `init` hook because the callback string in `add_action()` did not match the function name defined in `my-first-block.php`. 
-*   **Lesson**: WordPress hooks are literal. The string passed to the hook must match the function name exactly, or PHP will fail to find the callback, resulting in a site crash.
-*   **Status**: Fixed and verified.
+*   **Lesson**: WordPress hooks are literal. The string passed to the hook must match the function name exactly.
 
 ### 2. Block Properties & Wrapper Injection
-Explored the `useBlockProps` hook within `src/edit.js`. Successfully injected a custom constant into the block's wrapper to handle attributes.
+Explored the `useBlockProps` hook within `src/edit.js`.
 *   **Implementation**: Used `const blockProps = useBlockProps({ className: 'agency-test-class' });`.
-*   **Result**: Confirmed that custom classes can be merged into the standard WordPress block wrapper, allowing for specialized styling without losing core editor functionality.
+*   **Result**: Learned how to merge custom CSS classes into the standard WordPress wrapper, allowing for specialized styling while maintaining core editor functionality.
 
-### 3. Git Workflow & Essential Commands
-Through the development process, I established a workflow for managing a nested WordPress plugin structure. 
+### 3. Attributes & Data Persistence (The Dynamic Shift)
+Moved from static "HTML-scraped" content to **JSON-stored attributes**.
+*   **Implementation**: Removed `source` and `selector` from `block.json`. 
+*   **Lesson**: For Dynamic Blocks (PHP rendered), WordPress saves attributes as raw data in a JSON comment (`<!-- wp:my-block {"userName": "..."} /-->`). This is more robust than "scraping" HTML because changing the frontend HTML won't break existing saved data.
 
-### 4. Attributes & Data Persistence
-Moved from static content to dynamic data by defining attributes in `block.json`.
-*   **Implementation**: Added a `content` attribute with `source: "html"` and `selector: "p"`. This tells WordPress exactly where to find and save the data within the block's markup.
-*   **Lesson**: Attributes act as the "schema" for the block. Without them, the block has no memory.
+### 4. The "Handshake": React to PHP
+Implemented a **Dynamic Render Callback** to handle the frontend.
+*   **Editor (`edit.js`)**: Manages the UI and saves raw data into attributes.
+*   **Frontend (`render.php` callback)**: Uses a PHP function to generate HTML on-the-fly.
+*   **The "Magic" Wrapper**: Mastered `get_block_wrapper_attributes()` in PHP to automatically inject typography, spacing, and custom styles from the editor into the frontend `div`.
 
-### 5. RichText & The "Handshake"
-Implemented the `RichText` component to create a true WYSIWYG (What You See Is What You Get) experience.
-*   **Editor (`edit.js`)**: Used `RichText` with `onChange` and `setAttributes` to update the data as the user types.
-*   **Frontend (`save.js`)**: Used `RichText.Content` to ensure the saved HTML is rendered correctly for visitors.
-*   **Validation**: Learned that `save.js` must mirror the structure of `edit.js` to avoid "Block Validation Errors."
-
-#### 🛠 Learned Git Commands
-*   **Check Status**: `git status` — Used to verify which files are staged, unstaged, or untracked.
-*   **Targeted Staging**: `git add <file-path>` — Learned to stage specific files (e.g., `git add src/my-first-block/edit.js`) to maintain atomic commits.
-*   **Unstaging with Paths**: `git restore --staged <file-path>` — Mastered removing a file from the staging area using its full relative path (e.g., `git restore --staged src/my-first-block/block.json`).
-*   **Viewing Diffs**: `git diff <file-path>` — Used to inspect specific changes (like invisible newlines or attribute additions) before committing.
-*   **Multi-line Commits**: `git commit -m "Subject" -m "Body"` — Practiced writing professional commit messages that separate the "what" from the "why."
-*   **Pushing to Remote**: `git push origin main` — Sending local milestones to the GitHub repository.
+### 5. Troubleshooting the Syntax "Ghost"
+Learned the importance of literal HTML syntax when using `sprintf()` in PHP.
+*   **Discovery**: A missing `>` in the opening `<div>` string within the render function can break the entire layout. 
+*   **Fix**: Always ensure the HTML "container" is properly closed before appending content: `sprintf( '<div %s>', $wrapper_attributes )`.
 
 ---
 
 ## 📂 Project Structure
-*   `my-first-block.php`: The main entry point for WordPress.
-*   `src/`: The source directory containing React components and CSS.
-*   `build/`: The compiled code that WordPress actually executes (generated by `npm start`).
-*   `block.json`: The metadata file defining the block's identity, icon, and asset paths.
+*   `my-first-block.php`: The main entry point. Contains the `render_callback` function for dynamic output.
+*   `src/`: React source code.
+*   `build/`: Compiled production code (WordPress reads `block.json` from here).
+*   `block.json`: The metadata file. Defines attributes as **Raw Data types** (string, boolean, etc.) without HTML selectors.
 
 ---
 
 ### Next Steps in the Learning Journey
-*   [x] Define **Attributes** in `block.json` for data persistence.
-*   [x] Implement the **RichText** component for an interactive editing experience.
-*   [x] Ensure `save.js` output remains synchronized with the `edit.js` wrapper structure.
-*   [ ] **Inspector Controls**: Add a sidebar settings panel (e.g., color settings or toggles).
-*   [ ] **Block Styles**: Add custom CSS to `style.scss` (frontend) and `editor.scss` (editor-only).
-*   [ ] **Toolbar Customization**: Limit formatting options (e.g., only allow Bold and Italic).
+*   [x] Define **Attributes** for data persistence.
+*   [x] Implement **Dynamic PHP Rendering** to prevent block validation errors.
+*   [x] Use **get_block_wrapper_attributes** for professional attribute injection.
+*   [ ] **Inspector Controls**: Add a sidebar settings panel for color or layout toggles.
+*   [ ] **Block Styles**: Refine the design in `style.scss` (frontend) and `editor.scss` (editor-only).
