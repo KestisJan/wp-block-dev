@@ -63,6 +63,14 @@ import './editor.scss';
 // 	);
 // }
 
+// Brand Colors
+const BRAND_COLORS = [
+	{ name: 'Agency Blue', color: '#0073aa' },
+	{ name: 'Premium Black', color: '#191e23' },
+	{ name: 'Clean White', color: '#ffffff' },
+	{ name: 'Accent Orange', color: '#ffad00' },
+];
+
 /**
  * Trying out reference guide
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/
@@ -93,6 +101,8 @@ export default function Edit( { attributes, setAttributes } ) {
 				<PanelBody title={ __( 'Appearance Settings', 'my-first-block' ) }>
 						<p>{ __( 'Background Color', 'my-first-block' ) }</p>
 						<ColorPalette
+								colors={ BRAND_COLORS } // Restrict color choices
+								disableCustomColors={ true } // Lock the brand
 								value={ backgroundColor }
 								onChange={ onChangeBackgroundColor }
 						/>
