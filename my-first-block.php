@@ -25,5 +25,42 @@ add_action( 'init', 'my_frst_block_my_first_block_init' );
 function my_frst_block_my_first_block_init() {
 	// Point to /build not src/ - WordPress read block.json from there.
 	// __DIR__ = absolute path to this file's folder.
-	register_block_type( __DIR__ . '/build/my-first-block' );
+	register_block_type( __DIR__ . '/build/my-first-block', array(
+		'render_callback' => 'render_my_first_dynamic_block',
+	) );
+}
+
+/**
+ * This function builds the HTML for the frontend.
+ * It runs every time the page is loaded.
+ */
+function render_my_first_dynamic_block( $attributes, $content ) {
+	// Getting data from the attributes (with fallbacks)
+	$text  		= isset( $attributes['content'] ) ? $attributes['content'] : '';
+	$bg_color	= isset( $attributes['backgroundColor'] ) ? $attributes['backgroundColor'] : '#ffffff';
+	$align		= isset( $attributes['textAlign'] ) ? $attributes['textAlign'] : 'left';
+
+	if ( empty( $text ) ) {
+		return '';
+	}
+
+	// Prepare custom styles
+	$style = sprintf(
+		'background-color: %s; text-align: %s;',
+		esc_attr( $bg_color ),
+		esc_attr( $align )
+	);
+
+	// The "Magic" Wrapper
+	// This function automatically picks up the Typography and Spacing
+	// settings from block.json and merges them with our custom styles.
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'style' => $style ) );
+
+	// Return the HTML string
+	return sprintf(
+		'<div %1$s><p>%2$s</p></div>',
+		$wrapper_attributes,
+		$text
+	);
+
 }

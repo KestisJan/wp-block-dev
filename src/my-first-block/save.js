@@ -15,23 +15,27 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  *
  * @return {Element} Element to render.
  */
-export default function save( { attributes } ) {
-	// Destructure the attributes (Must match edit.js)
-	const { content, backgroundColor, textAlign } = attributes;
+// export default function save( { attributes } ) {
+// 	// Destructure the attributes (Must match edit.js)
+// 	const { content, backgroundColor, textAlign } = attributes;
 
-	return (
-		<div { ...useBlockProps.save( { 
-				style: { 
-					backgroundColor: backgroundColor,
-					textAlign: textAlign
-				 }
-		 	} ) }
-		 >
-			<RichText.Content
-				tagName='p'
-				value={ content }
-			/>
-		</div>
-	);
+// 	return (
+// 		<div { ...useBlockProps.save( { 
+// 				style: { 
+// 					backgroundColor: backgroundColor,
+// 					textAlign: textAlign
+// 				 }
+// 		 	} ) }
+// 		 >
+// 			<RichText.Content
+// 				tagName='p'
+// 				value={ content }
+// 			/>
+// 		</div>
+// 	);
+// }
+
+export default function save() {
+	return null;
 }
 
