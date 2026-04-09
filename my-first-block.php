@@ -39,8 +39,10 @@ function render_my_first_dynamic_block( $attributes, $content ) {
 	$text  		= isset( $attributes['content'] ) ? $attributes['content'] : '';
 	$bg_color	= isset( $attributes['backgroundColor'] ) ? $attributes['backgroundColor'] : '#ffffff';
 	$align		= isset( $attributes['textAlign'] ) ? $attributes['textAlign'] : 'left';
+	$user_name 	= isset( $attributes['userName']) ? $attributes['userName'] : '';
+	$bio		= isset( $attributes['bio']) ? $attributes['bio'] : '';
 
-	if ( empty( $text ) ) {
+	if ( empty( $text ) && empty ( $user_name ) && empty ( $bio ) ) {
 		return '';
 	}
 
@@ -56,11 +58,21 @@ function render_my_first_dynamic_block( $attributes, $content ) {
 	// settings from block.json and merges them with our custom styles.
 	$wrapper_attributes = get_block_wrapper_attributes( array( 'style' => $style ) );
 
-	// Return the HTML string
-	return sprintf(
-		'<div %1$s><p>%2$s</p></div>',
-		$wrapper_attributes,
-		$text
-	);
+	$html = sprintf( '<div %s>', $wrapper_attributes );
 
+	if ( ! empty( $user_name ) ) {
+		$html .= sprintf( '<h2 class="user-name">%s</h2>', wp_kses_post( $user_name ) );
+	}
+
+	if ( ! empty( $bio ) ) {
+		$html .= sprintf( '<p class="bio">%s</p>', wp_kses_post( $bio ) );
+	}
+
+	if ( ! empty( $text) ) {
+		$html .= sprintf( '<div class="content">%s</div>', wp_kses_post( $text ) );
+	}
+
+	$html .= '</div>';
+
+	return $html;
 }

@@ -77,22 +77,8 @@ const BRAND_COLORS = [
  */
 export default function Edit( { attributes, setAttributes } ) {
 	// Destructure the attributes we defined in block.json
-	const { content, backgroundColor, textAlign } = attributes;
+	const { content, backgroundColor, textAlign, userName, bio } = attributes;
 
-	// Handler for text changes
-	const onChangeContent = ( newContent ) => {
-		setAttributes( { content: newContent } );
-	};
-
-	// Handler for color changes
-	const onChangeBackgroundColor = ( newColor ) => {
-		setAttributes( { backgroundColor: newColor } );
-	};
-
-	// Handler for alignment
-	const onChangeAlignment = ( newAlign ) => {
-		setAttributes( { textAlign: newAlign } );
-	};
 
 	return (
 		<>
@@ -104,7 +90,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								colors={ BRAND_COLORS } // Restrict color choices
 								disableCustomColors={ true } // Lock the brand
 								value={ backgroundColor }
-								onChange={ onChangeBackgroundColor }
+								onChange={ ( backgroundColor ) => setAttributes( { backgroundColor } ) }
 						/>
 				</PanelBody>
 			</InspectorControls>
@@ -113,24 +99,35 @@ export default function Edit( { attributes, setAttributes } ) {
 			<BlockControls>
 				<AlignmentControl
 					value={ textAlign }
-					onChange={ onChangeAlignment }
+					onChange={ ( textAlign ) => setAttributes( { textAlign } ) }
 				/>
 			</BlockControls>
 
 			{ /* 3. The Block Interface (The actual content) */}
 			<div
 				{ ...useBlockProps( {
-					style: {
-						backgroundColor: backgroundColor,
-						textAlign: textAlign
-					},
+					style: { backgroundColor: backgroundColor, textAlign: textAlign },
 					className: 'agency-test-class'
 				} ) }
 			>
 				<RichText
+					tagName='h2'
+					className='user-name'
+					value={ userName }
+					onChange={ ( userName ) => setAttributes( { userName } ) }
+					placeholder={ __( 'Name...', 'agency' ) }
+				/>
+				<RichText
+					tagName='p'
+					className='bio'
+					value={ bio }
+					onChange={ ( bio ) => setAttributes( { bio } )}
+					placeholder={ __( 'Short bio...', 'agency' ) }
+				/>
+				<RichText
 					tagName="p"
 					value={ content }
-					onChange={ onChangeContent }
+					onChange={ ( content ) => setAttributes( { content } ) }
 					placeholder={ __( 'Type your block content here...', 'my-first-block' ) }				
 				/>
 			</div>
